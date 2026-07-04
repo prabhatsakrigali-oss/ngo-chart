@@ -33,3 +33,8 @@ autoscaling:
 config:
   appName: "NGO Management System"
   appEnv: "Development"
+
+secret:
+  dbUser: "ngo_user"
+  dbPassword: "ngo_password"
+  jwtSecret: "change-me-in-production"

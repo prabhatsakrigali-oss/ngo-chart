@@ -33,3 +33,8 @@ autoscaling:
 config:
   appName: "NGO Management System"
   appEnv: "Staging"
+
+secret:
+  dbUser: "stage_user"
+  dbPassword: "stage_password"
+  jwtSecret: "stage-secret-key"
