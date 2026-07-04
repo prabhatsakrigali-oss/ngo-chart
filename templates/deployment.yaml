@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ include "ngo-chart.fullname" . }}
+
+  labels:
+{{ include "ngo-chart.labels" . | indent 4 }}
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: {{ include "ngo-chart.fullname" . }}
+
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+
+      labels:
+        app: {{ include "ngo-chart.fullname" . }}
+
+    spec:
+      serviceAccountName: {{ include "ngo-chart.fullname" . }}-sa
+
+      containers:
+        - name: nginx
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          envFrom:
+            - configMapRef:
+                name: {{ include "ngo-chart.fullname" . }}-config
+
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+
+          resources:
+{{ toYaml .Values.resources | indent 12 }}

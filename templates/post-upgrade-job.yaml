@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: {{ .Release.Name }}-postupgrade
+
+  annotations:
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+
+  labels:
+{{ include "ngo-chart.labels" . | indent 4 }}
+
+spec:
+  template:
+    metadata:
+      name: postupgrade
+
+    spec:
+      restartPolicy: Never
+
+      containers:
+      - name: postupgrade
+
+        image: busybox
+
+        command:
+          - sh
+          - -c
+          - |
+            echo "=================================="
+            echo "Post Upgrade Hook Executed"
+            echo "Running Database Migration..."
+            echo "Cache Cleared..."
+            echo "Upgrade Completed Successfully"
+            echo "=================================="

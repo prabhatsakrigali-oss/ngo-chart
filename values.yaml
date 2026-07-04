@@ -1,0 +1,35 @@
+replicaCount: 5
+
+image:
+  repository: nginx
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  host: ngo.local
+
+resources:
+  requests:
+    cpu: "200m"
+    memory: "128Mi"
+
+  limits:
+    cpu: "500m"
+    memory: "256Mi"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 50
+
+config:
+  appName: "NGO Management System"
+  appEnv: "Development"

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: {{ include "ngo-chart.fullname" . }}
+
+  labels:
+{{ include "ngo-chart.labels" . | indent 4 }}
+
+spec:
+  type: {{ .Values.service.type }}
+
+  selector:
+    app: {{ include "ngo-chart.fullname" . }}
+
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}

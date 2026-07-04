@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: {{ .Release.Name }}-postinstall
+
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": before-hook-creation
+
+  labels:
+{{ include "ngo-chart.labels" . | indent 4 }}
+
+spec:
+  template:
+
+    metadata:
+      name: postinstall
+
+    spec:
+      restartPolicy: Never
+
+      containers:
+      - name: postinstall
+
+        image: busybox
+
+        command:
+          - sh
+          - -c
+          - |
+            echo "=================================="
+            echo "Post Install Hook Executed"
+            echo "Initializing Application..."
+            echo "Application Ready!"
+            echo "=================================="

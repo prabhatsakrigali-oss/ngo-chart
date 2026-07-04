@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+
+metadata:
+  name: {{ include "ngo-chart.fullname" . }}-rolebinding
+
+  labels:
+{{ include "ngo-chart.labels" . | indent 4 }}
+
+subjects:
+- kind: ServiceAccount
+  name: {{ include "ngo-chart.fullname" . }}-sa
+
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "ngo-chart.fullname" . }}-role

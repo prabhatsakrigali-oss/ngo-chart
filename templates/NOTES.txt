@@ -1,0 +1,29 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Release Name:
+{{ .Release.Name }}
+
+Namespace:
+{{ .Release.Namespace }}
+
+To check Pods:
+
+kubectl get pods -n {{ .Release.Namespace }}
+
+To check Service:
+
+kubectl get svc -n {{ .Release.Namespace }}
+
+To check Deployment:
+
+kubectl get deployment -n {{ .Release.Namespace }}
+
+To check Ingress:
+
+kubectl get ingress -n {{ .Release.Namespace }}
+
+Application Host:
+
+http://{{ .Values.ingress.host }}
+
+Happy Helming!

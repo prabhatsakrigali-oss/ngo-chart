@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: {{ .Release.Name }}-preinstall
+
+  annotations:
+    "helm.sh/hook": pre-install
+
+  labels:
+{{ include "ngo-chart.labels" . | indent 4 }}
+
+spec:
+  template:
+
+    metadata:
+      name: preinstall
+
+    spec:
+
+      restartPolicy: Never
+
+      containers:
+
+      - name: preinstall
+
+        image: busybox
+
+        command:
+          - sh
+          - -c
+          - echo "Running Pre-Install Hook..."
