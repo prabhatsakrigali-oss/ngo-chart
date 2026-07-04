@@ -38,3 +38,10 @@ secret:
   dbUser: "dev_user"
   dbPassword: "dev_password"
   jwtSecret: "dev-secret-key"
+
+persistence:
+  enabled: true
+  storageClass: standard
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  mountPath: /usr/share/nginx/html

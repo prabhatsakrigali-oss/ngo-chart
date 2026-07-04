@@ -42,3 +42,12 @@ spec:
 
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+
+          volumeMounts:
+            - name: app-storage
+              mountPath: {{ .Values.persistence.mountPath }}
+
+      volumes:
+        - name: app-storage
+          persistentVolumeClaim:
+            claimName: {{ include "ngo-chart.fullname" . }}-pvc

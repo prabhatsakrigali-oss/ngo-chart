@@ -38,3 +38,10 @@ secret:
   dbUser: "stage_user"
   dbPassword: "stage_password"
   jwtSecret: "stage-secret-key"
+
+persistence:
+  enabled: true
+  storageClass: standard
+  accessMode: ReadWriteOnce
+  size: 2Gi
+  mountPath: /usr/share/nginx/html

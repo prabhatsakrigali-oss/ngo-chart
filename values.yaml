@@ -38,3 +38,10 @@ secret:
   dbUser: "ngo_user"
   dbPassword: "ngo_password"
   jwtSecret: "change-me-in-production"
+
+persistence:
+  enabled: true
+  storageClass: standard
+  accessMode: ReadWriteOnce
+  size: 2Gi
+  mountPath: /usr/share/nginx/html

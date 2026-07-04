@@ -38,3 +38,10 @@ secret:
   dbUser: "prod_user"
   dbPassword: "prod_password"
   jwtSecret: "replace-with-real-secret"
+
+persistence:
+  enabled: true
+  storageClass: standard
+  accessMode: ReadWriteOnce
+  size: 10Gi
+  mountPath: /usr/share/nginx/html
