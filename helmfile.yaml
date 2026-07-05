@@ -1,0 +1,6 @@
+repositories: []
+
+releases:
+  - name: ngo-app
+    chart: .
+    namespace: default
