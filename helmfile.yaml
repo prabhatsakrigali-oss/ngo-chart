@@ -1,6 +1,15 @@
-repositories: []
+environments:
+  dev: {}
+  stage: {}
+  prod: {}
+
+---
 
 releases:
   - name: ngo-app
-    chart: .
     namespace: default
+    chart: .
+
+    values:
+      - values/common.yaml
+      - values/{{ .Environment.Name }}.yaml
