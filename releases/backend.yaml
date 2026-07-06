@@ -7,8 +7,13 @@ environments:
 
 releases:
   - name: backend
+
     namespace: default
+
     chart: ..
+
+    labels:
+      app: backend
 
     values:
       - ../values/common.yaml

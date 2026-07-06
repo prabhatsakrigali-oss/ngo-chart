@@ -1,3 +1,10 @@
+environments:
+  dev: {}
+  stage: {}
+  prod: {}
+
+---
+
 releases:
   - name: monitoring
 

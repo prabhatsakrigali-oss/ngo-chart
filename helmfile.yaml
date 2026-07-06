@@ -7,5 +7,6 @@ environments:
 
 helmfiles:
   - path: releases/frontend.yaml
-
   - path: releases/backend.yaml
+  - path: releases/database.yaml
+  - path: releases/monitoring.yaml

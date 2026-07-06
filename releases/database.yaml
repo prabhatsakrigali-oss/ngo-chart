@@ -1,3 +1,10 @@
+environments:
+  dev: {}
+  stage: {}
+  prod: {}
+
+---
+
 releases:
   - name: database
 
@@ -10,4 +17,4 @@ releases:
 
     values:
       - ../values/common.yaml
-      - ../values/dev.yaml
+      - ../values/{{ .Environment.Name }}.yaml
