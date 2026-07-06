@@ -1,0 +1,54 @@
+name: Helm CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  helm-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      - name: Verify Helm
+        run: helm version
+
+      - name: Helm Lint
+        run: helm lint .
+
+      - name: Helm Template
+        run: helm template ngo-app .
+
+      - name: Install Helmfile
+        run: |
+          HELMFILE_VERSION=1.7.0
+          wget https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz
+          tar -xzf helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz
+          sudo mv helmfile /usr/local/bin/
+
+      - name: Verify Helmfile
+        run: helmfile version
+
+      - name: Helmfile Template (Frontend)
+        run: helmfile --file releases/frontend.yaml template
+
+      - name: Helmfile Template (Backend)
+        run: helmfile --file releases/backend.yaml template
+
+      - name: Helmfile Template (Database)
+        run: helmfile --file releases/database.yaml template
+
+      - name: Helmfile Template (Monitoring)
+        run: helmfile --file releases/monitoring.yaml template
