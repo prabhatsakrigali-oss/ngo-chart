@@ -1,0 +1,15 @@
+environments:
+  dev: {}
+  stage: {}
+  prod: {}
+
+---
+
+releases:
+  - name: backend
+    namespace: default
+    chart: ..
+
+    values:
+      - ../values/common.yaml
+      - ../values/{{ .Environment.Name }}.yaml

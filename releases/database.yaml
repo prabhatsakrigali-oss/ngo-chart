@@ -1,0 +1,13 @@
+releases:
+  - name: database
+
+    namespace: default
+
+    chart: ..
+
+    labels:
+      app: database
+
+    values:
+      - ../values/common.yaml
+      - ../values/dev.yaml

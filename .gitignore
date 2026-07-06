@@ -1,0 +1,25 @@
+# SOPS
+secrets/*.yaml
+!secrets/*.enc.yaml
+
+# Age Keys
+.config/
+*.agekey
+keys.txt
+
+# Helm
+*.tgz
+
+# VS Code
+.vscode/
+
+# Terraform
+.terraform/
+*.tfstate*
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

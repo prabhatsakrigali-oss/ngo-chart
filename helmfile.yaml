@@ -5,11 +5,7 @@ environments:
 
 ---
 
-releases:
-  - name: ngo-app
-    namespace: default
-    chart: .
+helmfiles:
+  - path: releases/frontend.yaml
 
-    values:
-      - values/common.yaml
-      - values/{{ .Environment.Name }}.yaml
+  - path: releases/backend.yaml

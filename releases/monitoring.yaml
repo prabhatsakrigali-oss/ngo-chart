@@ -1,0 +1,13 @@
+releases:
+  - name: monitoring
+
+    namespace: default
+
+    chart: ..
+
+    labels:
+      app: monitoring
+
+    values:
+      - ../values/common.yaml
+      - ../values/{{ .Environment.Name }}.yaml
