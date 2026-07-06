@@ -31,13 +31,20 @@ jobs:
       - name: Helm Template
         run: helm template ngo-app .
 
-     - name: Clean workspace
-       run: |
-         rm -f *.tgz
-         rm -f *.tar.gz
+      - name: Install Helmfile
+        run: |
+          HELMFILE_VERSION=1.7.0
+          cd /tmp
+          wget https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz
+          tar -xzf helmfile_${HELMFILE_VERSION}_linux_amd64.tar.gz
+          sudo mv helmfile /usr/local/bin/
 
       - name: Verify Helmfile
         run: helmfile version
+
+      - name: Clean Workspace
+        run: |
+          rm -f /tmp/helmfile_*.tar.gz
 
       - name: Helmfile Template (Frontend)
         run: helmfile --file releases/frontend.yaml template
