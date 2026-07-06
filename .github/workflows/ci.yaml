@@ -47,13 +47,13 @@ jobs:
           rm -f /tmp/helmfile_*.tar.gz
 
       - name: Helmfile Template (Frontend)
-        run: helmfile --file releases/frontend.yaml template
+        run: helmfile --file releases/frontend.yaml -e dev template
 
       - name: Helmfile Template (Backend)
-        run: helmfile --file releases/backend.yaml template
+        run: helmfile --file releases/backend.yaml -e dev template
 
       - name: Helmfile Template (Database)
-        run: helmfile --file releases/database.yaml template
+        run: helmfile --file releases/database.yaml -e dev template
 
       - name: Helmfile Template (Monitoring)
-        run: helmfile --file releases/monitoring.yaml template
+        run: helmfile --file releases/monitoring.yaml -e dev template
