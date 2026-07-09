@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/tracking-id: ngo-chart:apps/Deployment:default/ngo-chart
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"ngo-chart:apps/Deployment:default/ngo-chart"},"labels":{"app.kubernetes.io/instance":"ngo-chart","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"ngo-chart","app.kubernetes.io/version":"1.0.0","helm.sh/chart":"ngo-chart-1.0.0"},"name":"ngo-chart","namespace":"default"},"spec":{"replicas":5,"selector":{"matchLabels":{"app":"ngo-chart"}},"template":{"metadata":{"annotations":{"checksum/config":"7abefa12c9b941b6d87d8110254679770ffbb9e676ae7fb9bae95101c12372b8"},"labels":{"app":"ngo-chart"}},"spec":{"containers":[{"envFrom":[{"configMapRef":{"name":"ngo-chart-config"}},{"secretRef":{"name":"ngo-chart-secret"}}],"image":"nginx:latest","imagePullPolicy":"Always","name":"nginx","ports":[{"containerPort":80}],"resources":{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"200m","memory":"128Mi"}},"volumeMounts":[{"mountPath":"/usr/share/nginx/html","name":"app-storage"}]}],"serviceAccountName":"ngo-chart-sa","volumes":[{"name":"app-storage","persistentVolumeClaim":{"claimName":"ngo-chart-pvc"}}]}}}}
+  creationTimestamp: "2026-07-07T10:53:14Z"
+  generation: 94
+  labels:
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    helm.sh/chart: ngo-chart-1.0.0
+  name: ngo-chart
+  namespace: default
+  resourceVersion: "305339"
+  uid: c10c698d-c3b2-4b95-9f89-63a26bd41943
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: ngo-chart
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: 7abefa12c9b941b6d87d8110254679770ffbb9e676ae7fb9bae95101c12372b8
+      labels:
+        app: ngo-chart
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: ngo-chart-config
+        - secretRef:
+            name: ngo-chart-secret
+        image: nginx:latest
+        imagePullPolicy: Always
+        name: nginx
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            cpu: 200m
+            memory: 128Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: app-storage
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: ngo-chart-sa
+      serviceAccountName: ngo-chart-sa
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: app-storage
+        persistentVolumeClaim:
+          claimName: ngo-chart-pvc
+status:
+  availableReplicas: 2
+  conditions:
+  - lastTransitionTime: "2026-07-07T11:03:52Z"
+    lastUpdateTime: "2026-07-07T11:09:35Z"
+    message: ReplicaSet "ngo-chart-6dd5c48b5b" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2026-07-07T19:42:33Z"
+    lastUpdateTime: "2026-07-07T19:42:33Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 94
+  readyReplicas: 2
+  replicas: 5
+  terminatingReplicas: 0
+  updatedReplicas: 5

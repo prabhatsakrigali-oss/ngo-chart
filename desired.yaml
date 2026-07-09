@@ -1,0 +1,436 @@
+---
+# Source: ngo-chart/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+
+metadata:
+  name: ngo-chart-sa
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+---
+# Source: ngo-chart/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+
+metadata:
+  name: ngo-chart-secret
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+type: Opaque
+
+data:
+  DB_USER: "bmdvX3VzZXI="
+  DB_PASSWORD: "bmdvX3Bhc3N3b3Jk"
+  JWT_SECRET: "Y2hhbmdlLW1lLWluLXByb2R1Y3Rpb24="
+---
+# Source: ngo-chart/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: ngo-chart-config
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+data:
+  APP_NAME: "NGO Management System"
+  APP_ENV: "Development"
+---
+# Source: ngo-chart/templates/pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: ngo-chart-pvc
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+
+  storageClassName: standard
+
+  resources:
+    requests:
+      storage: 2Gi
+---
+# Source: ngo-chart/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+
+metadata:
+  name: ngo-chart-role
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs:
+    - get
+    - list
+    - watch
+---
+# Source: ngo-chart/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+
+metadata:
+  name: ngo-chart-rolebinding
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+subjects:
+- kind: ServiceAccount
+  name: ngo-chart-sa
+
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ngo-chart-role
+---
+# Source: ngo-chart/templates/service.yaml
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: ngo-chart
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+spec:
+  type: NodePort
+
+  selector:
+    app: ngo-chart
+
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+# Source: ngo-chart/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: ngo-chart
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+spec:
+  replicas: 5
+
+  selector:
+    matchLabels:
+      app: ngo-chart
+
+  template:
+    metadata:
+      annotations:
+        checksum/config: 7abefa12c9b941b6d87d8110254679770ffbb9e676ae7fb9bae95101c12372b8
+
+      labels:
+        app: ngo-chart
+
+    spec:
+      serviceAccountName: ngo-chart-sa
+
+      containers:
+        - name: nginx
+          image: "nginx:latest"
+          imagePullPolicy: Always
+
+          envFrom:
+            - configMapRef:
+                name: ngo-chart-config
+
+            - secretRef:
+                name: ngo-chart-secret
+
+          ports:
+            - containerPort: 80
+
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 200m
+              memory: 128Mi
+
+          volumeMounts:
+            - name: app-storage
+              mountPath: /usr/share/nginx/html
+
+      volumes:
+        - name: app-storage
+          persistentVolumeClaim:
+            claimName: ngo-chart-pvc
+---
+# Source: ngo-chart/templates/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+
+metadata:
+  name: ngo-chart-hpa
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ngo-chart
+
+  minReplicas: 2
+  maxReplicas: 6
+
+  metrics:
+    - type: Resource
+
+      resource:
+        name: cpu
+
+        target:
+          type: Utilization
+          averageUtilization: 50
+---
+# Source: ngo-chart/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: ngo-chart-ingress
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+spec:
+  ingressClassName: nginx
+
+  rules:
+    - host: ngo-chart.local
+
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+
+            backend:
+              service:
+                name: ngo-chart
+
+                port:
+                  number: 80
+---
+# Source: ngo-chart/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: "ngo-chart-test"
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+  annotations:
+    "helm.sh/hook": test
+
+spec:
+  restartPolicy: Never
+
+  containers:
+    - name: wget
+
+      image: busybox
+
+      command:
+        - wget
+        - "ngo-chart:80"
+---
+# Source: ngo-chart/templates/post-install-job.yaml
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: ngo-chart-postinstall
+
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+spec:
+
+  ttlSecondsAfterFinished: 30
+
+  template:
+
+    metadata:
+      name: postinstall
+
+    spec:
+      restartPolicy: Never
+
+      containers:
+      - name: postinstall
+
+        image: busybox
+
+        command:
+          - sh
+          - -c
+          - |
+            echo "=================================="
+            echo "Post Install Hook Executed"
+            echo "Initializing Application..."
+            echo "Application Ready!"
+            echo "=================================="
+---
+# Source: ngo-chart/templates/post-upgrade-job.yaml
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: ngo-chart-postupgrade
+
+  annotations:
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+spec:
+
+  ttlSecondsAfterFinished: 30
+
+  template:
+    metadata:
+      name: postupgrade
+
+    spec:
+      restartPolicy: Never
+
+      containers:
+      - name: postupgrade
+
+        image: busybox
+
+        command:
+          - sh
+          - -c
+          - |
+            echo "=================================="
+            echo "Post Upgrade Hook Executed"
+            echo "Running Database Migration..."
+            echo "Cache Cleared..."
+            echo "Upgrade Completed Successfully"
+            echo "=================================="
+---
+# Source: ngo-chart/templates/pre-install-job.yaml
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: ngo-chart-preinstall
+
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+
+  labels:
+    app.kubernetes.io/name: ngo-chart
+    app.kubernetes.io/instance: ngo-chart
+    app.kubernetes.io/version: 1.0.0
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: ngo-chart-1.0.0
+
+spec:
+
+  ttlSecondsAfterFinished: 30
+
+  template:
+
+    metadata:
+      name: preinstall
+
+    spec:
+
+      restartPolicy: Never
+
+      containers:
+      - name: preinstall
+
+        image: busybox
+
+        command:
+          - sh
+          - -c
+          - echo "Running Pre-Install Hook..."

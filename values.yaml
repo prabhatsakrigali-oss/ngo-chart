@@ -31,7 +31,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 50
 
 config:
-  appName: "NGO Management System"
+  appName: "NGO Management System v2"
   appEnv: "Development"
 
 secret:

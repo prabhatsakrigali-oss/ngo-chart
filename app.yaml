@@ -1,0 +1,187 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"Application","metadata":{"annotations":{},"name":"ngo-chart","namespace":"argocd"},"spec":{"destination":{"namespace":"default","server":"https://kubernetes.default.svc"},"project":"default","source":{"path":".","repoURL":"https://github.com/prabhatsakrigali-oss/ngo-chart.git","targetRevision":"main"},"syncPolicy":{"automated":{"prune":true,"selfHeal":true},"syncOptions":["CreateNamespace=true"]}}}
+  creationTimestamp: "2026-07-07T10:46:51Z"
+  generation: 399
+  name: ngo-chart
+  namespace: argocd
+  resourceVersion: "302167"
+  uid: b2954538-0a6b-4bd6-be39-1fc62f4969ba
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: .
+    repoURL: https://github.com/prabhatsakrigali-oss/ngo-chart.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+status:
+  conditions:
+  - lastTransitionTime: "2026-07-07T19:06:54Z"
+    message: 'Failed to load target state: failed to generate manifest for source
+      1 of 1: rpc error: code = Unavailable desc = dns: A record lookup error: lookup
+      argocd-repo-server on 10.96.0.10:53: dial udp 10.96.0.10:53: i/o timeout'
+    type: ComparisonError
+  controllerNamespace: argocd
+  health:
+    lastTransitionTime: "2026-07-07T19:08:08Z"
+    status: Progressing
+  history:
+  - deployStartedAt: "2026-07-07T11:33:17Z"
+    deployedAt: "2026-07-07T11:37:10Z"
+    id: 0
+    initiatedBy:
+      automated: true
+    revision: 9a9a610961c79e35f5851b256b4e27f9abd942a8
+    source:
+      path: .
+      repoURL: https://github.com/prabhatsakrigali-oss/ngo-chart.git
+      targetRevision: main
+  - deployStartedAt: "2026-07-07T18:46:57Z"
+    deployedAt: "2026-07-07T18:50:50Z"
+    id: 1
+    initiatedBy:
+      automated: true
+    revision: 6a392e6868a6d16a94841755b78b4cbd1e0df226
+    source:
+      path: .
+      repoURL: https://github.com/prabhatsakrigali-oss/ngo-chart.git
+      targetRevision: main
+  operationState:
+    finishedAt: "2026-07-07T19:02:52Z"
+    message: successfully synced (all tasks run)
+    operation:
+      initiatedBy:
+        automated: true
+      retry:
+        limit: 5
+      sync:
+        autoHealAttemptsCount: 6
+        prune: true
+        resources:
+        - group: apps
+          kind: Deployment
+          name: ngo-chart
+        revision: 6a392e6868a6d16a94841755b78b4cbd1e0df226
+        source:
+          path: .
+          repoURL: https://github.com/prabhatsakrigali-oss/ngo-chart.git
+          targetRevision: main
+        syncOptions:
+        - CreateNamespace=true
+    phase: Succeeded
+    retryCount: 1
+    startedAt: "2026-07-07T18:58:31Z"
+    syncResult:
+      resources:
+      - group: apps
+        hookPhase: Running
+        images:
+        - nginx:latest
+        kind: Deployment
+        message: deployment.apps/ngo-chart configured
+        name: ngo-chart
+        namespace: default
+        status: Synced
+        syncPhase: Sync
+        version: v1
+      revision: 6a392e6868a6d16a94841755b78b4cbd1e0df226
+      source:
+        path: .
+        repoURL: https://github.com/prabhatsakrigali-oss/ngo-chart.git
+        targetRevision: main
+  reconciledAt: "2026-07-07T19:06:54Z"
+  resourceHealthSource: appTree
+  resources:
+  - kind: ConfigMap
+    name: ngo-chart-config
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  - kind: PersistentVolumeClaim
+    name: ngo-chart-pvc
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  - kind: Secret
+    name: ngo-chart-secret
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  - kind: Service
+    name: ngo-chart
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  - kind: ServiceAccount
+    name: ngo-chart-sa
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  - group: apps
+    kind: Deployment
+    name: ngo-chart
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  - group: autoscaling
+    kind: HorizontalPodAutoscaler
+    name: ngo-chart-hpa
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v2
+  - group: networking.k8s.io
+    kind: Ingress
+    name: ngo-chart-ingress
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: ngo-chart-role
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: ngo-chart-rolebinding
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  sourceHydrator: {}
+  summary:
+    externalURLs:
+    - http://ngo-chart.local/
+    images:
+    - nginx:latest
+  sync:
+    comparedTo:
+      destination:
+        namespace: default
+        server: https://kubernetes.default.svc
+      source:
+        path: .
+        repoURL: https://github.com/prabhatsakrigali-oss/ngo-chart.git
+        targetRevision: main
+    revision: main
+    status: Unknown
